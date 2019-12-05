@@ -4,11 +4,11 @@ clear all;
 global q
 global goal
 q.x = 10;
-q.y = 42;
+q.y = 10;
 q.x_vel = 0;
 q.y_vel = 0;
 q.mass = 1;
-q.radius = 1;
+q.radius = 2;
 env = createEnvironment();
 
 dt = 0.01;
@@ -26,12 +26,16 @@ daspect([1,1,1]);
 
 stop=false;
 
-kp = 4;
-kd = 1;
+kp = 1;
+kd = 1000;
+last_err = [goal.x - q.x; goal.y - q.y];
 while stop == false
-    err = pdist([q.x,q.y; goal.x, goal.y])
-    %robot_vel = norm([q.x_vel,q.y_vel]);
-    control.force = kp*err ;%- kd*robot_vel;
+    err = [goal.x - q.x; goal.y - q.y];
+    d_err = err-last_err;
+    proportional = kp*err
+    derivative = kd*d_err
+    force_vec = proportional+derivative;
+    control.force = norm(force_vec); 
     control.angle = atan2(goal.y-q.y,goal.x-q.x);
     dq = dynamics_ddi(control);
     update_state(dq,dt);
@@ -41,6 +45,6 @@ while stop == false
         stop = true;
     end
     pause(dt)
-    disp([control.force,control.angle])
-
+    %disp([control.force,control.angle])
+    last_err = err;
 end
