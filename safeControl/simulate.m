@@ -8,7 +8,7 @@ q.y = 10;
 q.x_vel = 0;
 q.y_vel = 0;
 q.mass = 1;
-q.radius = 2;
+q.radius = 1;
 env = createEnvironment();
 
 dt = 0.01;
@@ -26,17 +26,17 @@ daspect([1,1,1]);
 
 stop=false;
 
-kp = 1;
-kd = 1000;
+kp = 4;
+kd = 4;
 last_err = [goal.x - q.x; goal.y - q.y];
 while stop == false
     err = [goal.x - q.x; goal.y - q.y];
     d_err = err-last_err;
     proportional = kp*err
-    derivative = kd*d_err
-    force_vec = proportional+derivative;
+    derivative = kd*(d_err/dt)
+    force_vec = proportional+derivative
     control.force = norm(force_vec); 
-    control.angle = atan2(goal.y-q.y,goal.x-q.x);
+    control.angle = atan2(force_vec(2),force_vec(1));
     dq = dynamics_ddi(control);
     update_state(dq,dt);
     robot.Position = [q.x - q.radius,q.y-q.radius, q.radius,q.radius];
