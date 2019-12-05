@@ -32,9 +32,9 @@ last_err = [goal.x - q.x; goal.y - q.y];
 while stop == false
     err = [goal.x - q.x; goal.y - q.y];
     d_err = err-last_err;
-    proportional = kp*err
-    derivative = kd*(d_err/dt)
-    force_vec = proportional+derivative
+    %proportional = kp*err
+    %derivative = kd*(d_err/dt)
+    %force_vec = proportional+derivative
     control.force = norm(force_vec); 
     control.angle = atan2(force_vec(2),force_vec(1));
     dq = dynamics_ddi(control);
