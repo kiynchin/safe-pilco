@@ -6,6 +6,6 @@ y0=params.y;
 t=-pi:0.01:pi;
 x=x0+a*cos(t);
 y=y0+b*sin(t);
-plot(x,y)
+plot(x,y,'k')
 
 end
