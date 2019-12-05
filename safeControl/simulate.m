@@ -32,12 +32,14 @@ last_err = [goal.x - q.x; goal.y - q.y];
 while stop == false
     err = [goal.x - q.x; goal.y - q.y];
     d_err = err-last_err;
-    proportional = kp*err
-    derivative = kd*(d_err/dt)
-    force_vec = proportional+derivative
-    control.force = norm(force_vec); 
+    proportional = kp*err;
+    derivative = kd*(d_err/dt);
+    force_vec = proportional+derivative;
+    control.force = min(norm(force_vec), 100); 
     control.angle = atan2(force_vec(2),force_vec(1));
-    dq = dynamics_ddi(control);
+    [safeControl, phi] = calcDetSafeControl(q, control, env);
+    
+    dq = dynamics_ddi(safeControl);
     update_state(dq,dt);
     robot.Position = [q.x - q.radius,q.y-q.radius, q.radius,q.radius];
     drawnow;
@@ -45,6 +47,8 @@ while stop == false
         stop = true;
     end
     pause(dt)
-    %disp([control.force,control.angle])
+    disp([control.force,control.angle])
+    disp([safeControl.force,safeControl.angle]);
+    disp(phi);
     last_err = err;
 end

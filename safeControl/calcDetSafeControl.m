@@ -38,7 +38,7 @@ controlSafe.force = sqrt(u_safe(2)^2 + u_safe(1)^2)*mass;
 controlSafe.angle = atan2(u_safe(2), u_safe(1));
 
 if(1)
-    v = -10:0.01:10; [x1 x2] = meshgrid(v);
+    v = -100:0.1:100; [x1 x2] = meshgrid(v);
     cond = double(abs(x1) + abs(x2) >= 0);
     for ii = 1:size(A, 1)
         condN = double(A(ii,1)*x1 + A(ii,2)*x2 <= b(ii));
